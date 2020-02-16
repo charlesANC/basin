@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Basin</title>
+</head>
+<body>
+<p>Basin - Web flow running on least cost path</p>
+<br>
+<main role="main" class="container">
+    <ul>
+        <li th:each="fileName : ${fileNames}"><span th:text="${fileName}" />&nbsp;<a th:href="'/play/'+${fileName}" >play</a></li>
+    </ul>
+</main>
+</body>
+</html>

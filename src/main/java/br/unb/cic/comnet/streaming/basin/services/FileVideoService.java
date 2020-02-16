@@ -1,7 +1,11 @@
 package br.unb.cic.comnet.streaming.basin.services;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.UrlResource;
@@ -17,6 +21,16 @@ public class FileVideoService {
 	
 	public FileVideoService(String videosDirectory) {
 		this.videosDirectory = videosDirectory;
+	}
+	
+	public List<String> listFiles(final String extension) throws MalformedURLException, IOException {
+		File directory = new File(getVideoURL(".").getURI());
+		return Arrays.asList(directory.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.toLowerCase().endsWith("." + extension.toLowerCase());
+			}
+		}));
 	}
 	
 	public UrlResource getVideoURL(String fileName) throws MalformedURLException, IOException {

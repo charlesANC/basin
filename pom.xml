@@ -23,7 +23,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+	    </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -35,6 +38,23 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!--  JavaScript dependencies -->
+		<!--  Necessário ver se tem webjars dessas versões que eu preciso 
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>video-js</artifactId>
+		    <version>7.1.0</version>
+		</dependency>
+		-->
+		
+    <!-- WEB DEPENDENCIES SERVLET -->
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>webjars-servlet-2.x</artifactId>
+      <version>1.1</version>
+    </dependency>		
+				
 	</dependencies>
 
 	<build>

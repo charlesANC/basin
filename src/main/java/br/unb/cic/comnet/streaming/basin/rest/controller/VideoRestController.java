@@ -1,6 +1,7 @@
 package br.unb.cic.comnet.streaming.basin.rest.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,6 +25,16 @@ public class VideoRestController {
 	
 	@Autowired
 	private FileVideoService videoService;
+	
+	@GetMapping(value="videos/list", produces="application/json")
+	public List<String> getFileList() {
+		try {
+			return videoService.listFiles("mp4");
+		} catch (IOException e) {
+			log.error("There is a problem! >>> {}", e);
+			return null;
+		}
+	}
 	
 	@GetMapping("/videos/{fileName}/full")
 	public ResponseEntity<UrlResource> getFullVideo(@PathVariable("fileName") String fileName) {
