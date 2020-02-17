@@ -38,6 +38,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+		  <groupId>net.bramp.ffmpeg</groupId>
+		  <artifactId>ffmpeg</artifactId>
+		  <version>0.6.2</version>
+		</dependency>	
 		
 		<!--  JavaScript dependencies -->
 		<!--  Necessário ver se tem webjars dessas versões que eu preciso 

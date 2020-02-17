@@ -23,12 +23,17 @@ public class FileVideoService {
 		this.videosDirectory = videosDirectory;
 	}
 	
-	public List<String> listFiles(final String extension) throws MalformedURLException, IOException {
+	public List<String> listFiles(final String... extensions) throws MalformedURLException, IOException {
 		File directory = new File(getVideoURL(".").getURI());
 		return Arrays.asList(directory.list(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.toLowerCase().endsWith("." + extension.toLowerCase());
+				for(String extension: extensions) {
+					if (name.toLowerCase().endsWith("." + extension.toLowerCase())) {
+						return true;
+					}
+				}
+				return false;
 			}
 		}));
 	}

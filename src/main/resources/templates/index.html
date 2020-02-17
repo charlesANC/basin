@@ -9,7 +9,11 @@
 <br>
 <main role="main" class="container">
     <ul>
-        <li th:each="fileName : ${fileNames}"><span th:text="${fileName}" />&nbsp;<a th:href="'/play/'+${fileName}" >play</a></li>
+        <li th:each="fileName : ${fileNames}">
+        	<span th:text="${fileName}" />&nbsp;
+        	<a th:href="'/play/'+${fileName}" >play</a>&nbsp;
+        	<a th:href="'/transcode/'+${fileName}" >transcode</a>
+        </li>
     </ul>
 </main>
 </body>
