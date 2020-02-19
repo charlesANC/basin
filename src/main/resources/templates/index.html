@@ -11,10 +11,18 @@
     <ul>
         <li th:each="fileName : ${fileNames}">
         	<span th:text="${fileName}" />&nbsp;
-        	<a th:href="'/play/'+${fileName}" >play</a>&nbsp;
-        	<a th:href="'/transcode/'+${fileName}" >transcode</a>
+        	<a th:href="'play/'+${fileName}" >play</a>&nbsp;
+        	<a th:href="'transcode/'+${fileName}" >transcode</a>
         </li>
     </ul>
+    <br>
+    <hl></hl>
+    <h3>Put down the desired URL and CRF parameters to Transcode:</h3>
+    <form action="#" th:action="@{/hlstrans}" th:object="${hlsFile}" method="post" >
+    	<p>URL: <input type="text" th:field="*{url}" size="80" /></p>
+    	<p>CRF: <input type="text" th:field="*{crf}" size="4" /></p>
+    	<p><input type="submit" value="Submit"/></p>
+    </form>
 </main>
 </body>
 </html>

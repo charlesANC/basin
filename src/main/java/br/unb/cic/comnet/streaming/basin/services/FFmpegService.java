@@ -1,9 +1,8 @@
 package br.unb.cic.comnet.streaming.basin.services;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
 
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
@@ -16,10 +15,11 @@ public class FFmpegService {
 		this.executor = executor;
 	}
 	
-	public void transcode(UrlResource resource) throws IOException {
-		executor.createJob(createTwoFilesBuilder(new File(resource.getURI()).getAbsolutePath())).run();		
+	public void transcode(Resource resource) throws IOException {
+		executor.createJob(createTwoFilesBuilder(resource.getFile().getAbsolutePath())).run();		
 	}
 	
+	/*
 	private FFmpegBuilder createSingleFileBuilder(String fileName) {
 		FFmpegBuilder builder = new FFmpegBuilder()
 				  .setInput("\"" + fileName + "\"")
@@ -29,6 +29,7 @@ public class FFmpegService {
 				    .done();
 		return builder;
 	}
+	*/
 	
 	private FFmpegBuilder createTwoFilesBuilder(String fileName) {
 		FFmpegBuilder builder = new FFmpegBuilder()

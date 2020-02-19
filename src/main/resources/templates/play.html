@@ -9,6 +9,7 @@
 <p>Basin - Web flow running on least cost path</p>
 <br>
 <main role="main" class="container">
+	<p>Playing the file <span th:text="${fileURL}" /></p>
 	<video id='player'  class="video-js vjs-default-skin" width="400" height="300" controls>
 		<source th:type="${mediaType}" th:src="${fileURL}">
 	</video>

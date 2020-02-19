@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
@@ -37,10 +37,10 @@ public class VideoRestController {
 	}
 	
 	@GetMapping("/videos/{fileName}/full")
-	public ResponseEntity<UrlResource> getFullVideo(@PathVariable("fileName") String fileName) {
+	public ResponseEntity<Resource> getFullVideo(@PathVariable("fileName") String fileName) {
 		try {
 			log.info("Serving file " + fileName);
-			UrlResource resource = videoService.getVideoURL(fileName);
+			Resource resource = videoService.getVideoURL(fileName);
 			return ResponseEntity
 					.status(HttpStatus.OK)
 					.contentType(videoService.getResourceMediaType(resource))
@@ -73,7 +73,7 @@ public class VideoRestController {
 	private ResponseEntity<ResourceRegion> getVideoPartially(String fileName, HttpHeaders headers) {
 		try {
 			log.info("Serving partialy file " + fileName);			
-			UrlResource resource = videoService.getVideoURL(fileName);
+			Resource resource = videoService.getVideoURL(fileName);
 			HttpRange range = headers.getRange().isEmpty() ? null : headers.getRange().get(0);
 			return ResponseEntity
 						.status(HttpStatus.PARTIAL_CONTENT)

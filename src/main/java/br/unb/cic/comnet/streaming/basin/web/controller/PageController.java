@@ -5,14 +5,17 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import br.unb.cic.comnet.streaming.basin.services.FFmpegService;
 import br.unb.cic.comnet.streaming.basin.services.FileVideoService;
+import br.unb.cic.comnet.streaming.basin.web.model.HLSFile;
 
 @Controller
 public class PageController {
@@ -27,6 +30,7 @@ public class PageController {
 	@GetMapping("/")
 	public String home(Model model) {
 		try {
+			model.addAttribute("hlsFile", new HLSFile());
 			model.addAttribute("fileNames", videoService.listFiles("mp4", "m3u8"));
 			return "index";			
 		} catch (IOException e) {
@@ -38,9 +42,9 @@ public class PageController {
 	@GetMapping("/play/{fileName}")
 	public String play(@PathVariable("fileName") String fileName, Model model) {
 		try {
-			UrlResource url = videoService.getVideoURL(fileName);
-			model.addAttribute("mediaType", videoService.getResourceMediaType(url));
-			model.addAttribute("fileURL", "/videos/"+fileName+"/full");
+			Resource source = videoService.getVideoURL(fileName);
+			model.addAttribute("mediaType", videoService.getResourceMediaType(source));
+			model.addAttribute("fileURL", "/basin/videos/"+fileName+"/full");
 			return "play";			
 		} catch (IOException e) {
 			log.error("Something wrong has happen >>> {}", e);
@@ -53,6 +57,7 @@ public class PageController {
 		try {
 			ffmpegService.transcode(videoService.getVideoURL(fileName));
 			model.addAttribute("message", "Transcoding has started... wait some seconds and press F5.");
+			model.addAttribute("hlsFile", new HLSFile());			
 			model.addAttribute("fileNames", videoService.listFiles("mp4", "m3u8"));
 		} catch (IOException e) {
 			log.error("Something wrong has happen >>> {}", e);
@@ -60,5 +65,11 @@ public class PageController {
 		}
 		return "index";
 	}
-
+	
+	@PostMapping("/hlstrans")
+	public String transcodeHlsFiles(@ModelAttribute("hlsFile") HLSFile hlsFile) {
+		log.info("URL: " + hlsFile.getUrl());
+		log.info("CRF: " + hlsFile.getCrf());	
+		return "index";
+	}
 }
