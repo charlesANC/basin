@@ -11,13 +11,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpRange;
 import org.springframework.http.MediaType;
@@ -28,14 +25,9 @@ public class FileVideoService {
 	private static final long MAX_DATA_BLOCK = 1024 * 1024;
 	
 	private String videosDirectory;
-	private ResourceLoader resourceLoader;
 	
-	private Map<String, File> outputs; 
-	
-	public FileVideoService(String videosDirectory, ResourceLoader resourceLoader) {
+	public FileVideoService(String videosDirectory) {
 		this.videosDirectory = videosDirectory;
-		this.resourceLoader = resourceLoader;
-		this.outputs = new HashMap<String, File>();
 	}
 	
 	public List<String> listFiles(final String... extensions) throws MalformedURLException, IOException {
@@ -87,17 +79,16 @@ public class FileVideoService {
 		}
 		
 		File fileInput = input.getFile();
-		if (!outputs.containsKey(fileName) || 
-				outputs.get(fileName).lastModified() < fileInput.lastModified()) {
-			File fileOutput = File.createTempFile(fileName.replace(".", ""), ".m3u8");
+		File fileOutput = getInputResource("out_" + fileName).getFile();		
+		if (!fileOutput.exists() ||	fileOutput.lastModified() < fileInput.lastModified()) {
+			fileOutput.createNewFile();
 			convertM3u8ToFullPath(fileInput, fileOutput);
-			outputs.put(fileName, fileOutput);
 		}
-		return new FileSystemResource(outputs.get(fileName));
+		return new FileSystemResource(fileOutput);
 	}
 	
 	private Resource getInputResource(String fileName) {
-		return resourceLoader.getResource("classpath:" + videosDirectory + "/" + fileName);
+		return new FileSystemResource(new File(videosDirectory + "/" + fileName));
 	}
 	
 	private void convertM3u8ToFullPath(File input, File output) throws FileNotFoundException, IOException {

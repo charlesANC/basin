@@ -1,14 +1,10 @@
 package br.unb.cic.comnet.streaming.basin.configuration;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
 
 import br.unb.cic.comnet.streaming.basin.services.FFmpegService;
 import br.unb.cic.comnet.streaming.basin.services.FileVideoService;
@@ -30,8 +26,8 @@ public class BasinBeansConfiguration {
 	private String ffprobPath;
 	
 	@Bean
-	public FileVideoService getFileVideoService(ResourceLoader resourceLoader) {
-		return new FileVideoService(videosDirectory, resourceLoader);
+	public FileVideoService getFileVideoService() {
+		return new FileVideoService(videosDirectory);
 	}
 	
 	@Bean
@@ -52,7 +48,7 @@ public class BasinBeansConfiguration {
 	@Bean
 	public RunProcessFunction getRunProcessFunction() throws IOException {
 		RunProcessFunction runProcessFunction = new RunProcessFunction();
-		runProcessFunction.setWorkingDirectory(new File(new ClassPathResource(videosDirectory).getURI()));
+		runProcessFunction.setWorkingDirectory(videosDirectory);		
 		return runProcessFunction;
 	}
 }
