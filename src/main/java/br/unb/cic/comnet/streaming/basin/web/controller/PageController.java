@@ -1,6 +1,8 @@
 package br.unb.cic.comnet.streaming.basin.web.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import br.unb.cic.comnet.streaming.basin.services.FFmpegService;
 import br.unb.cic.comnet.streaming.basin.services.FileVideoService;
+import br.unb.cic.comnet.streaming.basin.services.TranscodingDataUnit;
+import br.unb.cic.comnet.streaming.basin.services.URLForTranscoding;
 import br.unb.cic.comnet.streaming.basin.web.model.HLSFile;
 
 @Controller
@@ -67,9 +71,27 @@ public class PageController {
 	}
 	
 	@PostMapping("/hlstrans")
-	public String transcodeHlsFiles(@ModelAttribute("hlsFile") HLSFile hlsFile) {
+	public String transcodeHlsFiles(@ModelAttribute("hlsFile") HLSFile hlsFile, Model model) {
+		model.addAttribute("hlsFile", new HLSFile());		
 		log.info("URL: " + hlsFile.getUrl());
-		log.info("CRF: " + hlsFile.getCrf());	
+		log.info("CRF: " + hlsFile.getCrf());
+		
+		try {
+			int index = 0;
+			URL url = new URL(hlsFile.getUrl());
+			TranscodingDataUnit dataUnit = new TranscodingDataUnit(url);			
+			URLForTranscoding next = null;
+			do {
+				dataUnit.updateLinks();
+				next = dataUnit.getNextToTranscode();
+				if (next == null) break;
+				ffmpegService.reduceQuality(dataUnit.getNextToTranscode().getUrl(), index++);				
+			} while (true);
+		} catch (IOException e) {
+			log.error("Something wrong has happen >>> {}", e);
+			model.addAttribute("message", "Error: " + e.getMessage());
+		}
+		
 		return "index";
 	}
 }
