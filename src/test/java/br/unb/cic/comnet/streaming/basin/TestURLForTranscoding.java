@@ -3,6 +3,7 @@ package br.unb.cic.comnet.streaming.basin;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,6 +16,8 @@ import br.unb.cic.comnet.streaming.basin.configuration.BasinBeansConfiguration;
 import br.unb.cic.comnet.streaming.basin.services.FFmpegService;
 import br.unb.cic.comnet.streaming.basin.services.TranscodingDataUnit;
 import br.unb.cic.comnet.streaming.basin.services.URLForTranscoding;
+import io.lindstrom.m3u8.model.MediaPlaylist;
+import io.lindstrom.m3u8.parser.MediaPlaylistParser;
 
 @SpringBootTest
 @Import(BasinBeansConfiguration.class)
