@@ -3,20 +3,13 @@ package br.unb.cic.comnet.streaming.basin.services;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.internal.util.logging.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import ch.qos.logback.classic.Logger;
-import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 
 public class FFmpegService {
 	private static final int QUALITY_REDUCE_FACTOR = 24;
-	
-	private Log log = LogFactory.getLog(FFmpeg.class);
 	
 	private FFmpegExecutor executor;
 	
@@ -28,21 +21,9 @@ public class FFmpegService {
 		executor.createJob(createTwoFilesBuilder(resource.getFile().getAbsolutePath())).run();		
 	}
 	
-	public void reduceQuality(URL url, int index) throws IOException {
-		executor.createJob(reduceBitRate(QUALITY_REDUCE_FACTOR, url, index)).run();
+	public void reduceQuality(URL url, String outputName) throws IOException {
+		executor.createJob(reduceBitRate(QUALITY_REDUCE_FACTOR, url, outputName)).run();
 	}
-	
-	/*
-	private FFmpegBuilder createSingleFileBuilder(String fileName) {
-		FFmpegBuilder builder = new FFmpegBuilder()
-				  .setInput("\"" + fileName + "\"")
-				  .addOutput("thumbnail.png")
-				    .setFrames(1)
-				    .setVideoFilter("select='gte(n\\,10)',scale=200:-1")
-				    .done();
-		return builder;
-	}
-	*/
 	
 	private FFmpegBuilder createTwoFilesBuilder(String fileName) {
 		FFmpegBuilder builder = new FFmpegBuilder()
@@ -61,11 +42,11 @@ public class FFmpegService {
 		return builder;
 	}
 	
-	private FFmpegBuilder reduceBitRate(int factor, URL url, int index) {
+	private FFmpegBuilder reduceBitRate(int factor, URL input, String output) {
 		FFmpegBuilder builder = new FFmpegBuilder()
-				.setVerbosity(FFmpegBuilder.Verbosity.INFO)
-				  .setInput(url.toString())
-				  .addOutput("mine_" + index + ".ts")
+				.setVerbosity(FFmpegBuilder.Verbosity.QUIET)
+				  .setInput(input.toString())
+				  .addOutput(output)
 				  	.setVideoCodec("libx264")				  
 				  	.addExtraArgs("-crf", String.valueOf(factor))
 				  	.setAudioCodec("aac")

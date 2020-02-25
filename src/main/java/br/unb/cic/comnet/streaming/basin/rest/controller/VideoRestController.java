@@ -8,9 +8,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,14 +38,17 @@ public class VideoRestController {
 		}
 	}
 	
-	@GetMapping("/videos/{fileName}/full")
+	@GetMapping("/videos/full/{fileName}")
 	public ResponseEntity<Resource> getFullVideo(@PathVariable("fileName") String fileName) {
 		try {
 			log.info("Serving file " + fileName);
 			Resource resource = videoService.getVideoURL(fileName);
+			MediaType mediaType = videoService.getResourceMediaType(resource);
+			
 			return ResponseEntity
 					.status(HttpStatus.OK)
-					.contentType(videoService.getResourceMediaType(resource))
+					.contentType(mediaType)
+					.cacheControl(getCacheControl(mediaType))
 					.body(resource);			
 		} catch (IOException e) {
 			log.error("There is a problem! >>> {}", e);
@@ -53,7 +58,7 @@ public class VideoRestController {
 		}
 	}
 	
-	@GetMapping("/videos/{fileName}/partials")
+	@GetMapping("/videos/partials/{fileName}")
 	public ResponseEntity<ResourceRegion> getPartialVideo(
 			@PathVariable("fileName") String fileName, 
 			@RequestHeader HttpHeaders headers) 
@@ -68,6 +73,13 @@ public class VideoRestController {
 			@RequestHeader HttpHeaders headers) 
 	{
 		return getVideoPartially(directory + "/" + fileName, headers);
+	}
+	
+	private CacheControl getCacheControl(MediaType mediaType) {
+		if (mediaType.getSubtype().equals("vnd.apple.mpegurl")) {
+			return CacheControl.noStore().cachePrivate();
+		}
+		return CacheControl.empty();
 	}	
 
 	private ResponseEntity<ResourceRegion> getVideoPartially(String fileName, HttpHeaders headers) {

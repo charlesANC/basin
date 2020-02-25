@@ -1,9 +1,14 @@
 package br.unb.cic.comnet.streaming.basin.web.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import br.unb.cic.comnet.streaming.basin.services.FFmpegService;
 import br.unb.cic.comnet.streaming.basin.services.FileVideoService;
-import br.unb.cic.comnet.streaming.basin.services.TranscodingDataUnit;
-import br.unb.cic.comnet.streaming.basin.services.URLForTranscoding;
+import br.unb.cic.comnet.streaming.basin.services.TranscodingUnit;
 import br.unb.cic.comnet.streaming.basin.web.model.HLSFile;
 
 @Controller
@@ -30,6 +34,8 @@ public class PageController {
 	
 	@Autowired
 	private FFmpegService ffmpegService;
+	
+	private List<TranscodingUnit> jobs = new ArrayList<TranscodingUnit>();
 	
 	@GetMapping("/")
 	public String home(Model model) {
@@ -48,7 +54,7 @@ public class PageController {
 		try {
 			Resource source = videoService.getVideoURL(fileName);
 			model.addAttribute("mediaType", videoService.getResourceMediaType(source));
-			model.addAttribute("fileURL", "/basin/videos/"+fileName+"/full");
+			model.addAttribute("fileURL", "/basin/videos/full/"+fileName);
 			return "play";			
 		} catch (IOException e) {
 			log.error("Something wrong has happen >>> {}", e);
@@ -69,7 +75,7 @@ public class PageController {
 		}
 		return "index";
 	}
-	
+/*	
 	@PostMapping("/hlstrans")
 	public String transcodeHlsFiles(@ModelAttribute("hlsFile") HLSFile hlsFile, Model model) {
 		model.addAttribute("hlsFile", new HLSFile());		
@@ -94,4 +100,19 @@ public class PageController {
 		
 		return "index";
 	}
+*/
+	
+	@PostMapping("/hlstrans")
+	public String transcodeHlsFiles(@ModelAttribute("hlsFile") HLSFile hlsFile, Model model) {
+		try {
+			TranscodingUnit unitJob = new TranscodingUnit(videoService, ffmpegService, new URL(hlsFile.getUrl()));
+			jobs.add(unitJob);
+			new Thread(unitJob).start();
+		} catch (IOException e) {
+			log.error("Something wrong has happen >>> {}", e);
+			model.addAttribute("message", "Error: " + e.getMessage());
+		}
+		
+		return "index";
+	}	
 }

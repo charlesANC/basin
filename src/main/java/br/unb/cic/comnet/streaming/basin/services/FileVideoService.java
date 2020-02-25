@@ -68,6 +68,12 @@ public class FileVideoService {
 		}
 	}
 	
+	public Resource createFileForWrinting(String fileName) throws FileNotFoundException, IOException {
+		Resource newFile = getInputResource(fileName);
+		newFile.getFile().createNewFile();
+		return newFile;
+	}
+	
 	private Resource dealWithManifestFiles(String fileName) throws FileNotFoundException, IOException {
 		Resource input = getInputResource(fileName);
 		if (!input.exists()) {
@@ -102,7 +108,7 @@ public class FileVideoService {
 				if (line.startsWith("#")) {
 					writer.write(line + "\r\n");
 				} else {
-					writer.write(url + "/videos/" + line + "/partials\r\n");
+					writer.write(url + "/videos/full/" + line + "\r\n");
 				}
 			}
 		}

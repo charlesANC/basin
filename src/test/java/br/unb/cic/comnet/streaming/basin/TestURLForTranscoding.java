@@ -3,7 +3,6 @@ package br.unb.cic.comnet.streaming.basin;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,8 +15,6 @@ import br.unb.cic.comnet.streaming.basin.configuration.BasinBeansConfiguration;
 import br.unb.cic.comnet.streaming.basin.services.FFmpegService;
 import br.unb.cic.comnet.streaming.basin.services.TranscodingDataUnit;
 import br.unb.cic.comnet.streaming.basin.services.URLForTranscoding;
-import io.lindstrom.m3u8.model.MediaPlaylist;
-import io.lindstrom.m3u8.parser.MediaPlaylistParser;
 
 @SpringBootTest
 @Import(BasinBeansConfiguration.class)
@@ -50,7 +47,7 @@ public class TestURLForTranscoding {
 						URLForTranscoding forTranscoding = unit.getNextToTranscode();
 						if (forTranscoding != null) {
 							System.out.println("  Now transcoding file " + forTranscoding.getUrl());
-							ffmpegService.reduceQuality(forTranscoding.getUrl(), index++);
+							ffmpegService.reduceQuality(forTranscoding.getUrl(), ""+index++);
 							System.out.println("finished!");							
 						}
 					}
@@ -75,7 +72,7 @@ public class TestURLForTranscoding {
 		}
 		
 		URL url = new URL("https://video-edge-c2b6fc.sao01.abs.hls.ttvnw.net/v1/segment/CpUE6Lq3aT24bPq-9a5QitqrwhiT-6xbplh6x-r8DUNXhOOMN5nxuT9cBie3Z5UYkT5kGNHr80e_eKrN_M-O1uoSwoyhNVVsoTjqii5aJpgIJxZy05E5PE9JlzCndvXW5_WbaTuFVKdvSTKcZhL4OrZTt6oWB_wy2bcOl1-0E3ibM-0lp688P5OjY0NQMGgHcyILKJA8ZDIHRJEPTBXrxGOrExj4p5M5bW_dc5HwuwibOraIU0MUF5zejNpvtXrk4Q4cmuCJEWUZzS7kJsMAGC7tCyAE7NeKjMabWmxt8gkGnl4DAbm1USf5JIGng-T_95ghXe-jxNnUtem1nF_FDqICxE2Dj9RBTg2VVBCd2Sl8hZOryy4KvdEJk9We4ZlUTKnMO8mHnkcArwSOTVaFhsg0vFbFtP_tng3VgFpFNFECFIgeGkpCcSAUhVCJUTOVJ_yILm_2NNW2h7Yk8onL6RjK0REJ2Y7H4wIMokETRXj8gIYj9dgaK1QiFKrf8tyci8Ae8LyZ7jlC2vPWf8kmRZOP4DPVQ2iQ9YBAnFMmPPY1C0iaFMrI2lTlgwtZu6FZyAE7iIzR_lIau6lCFL7fayzwMHGF5uuMVS1fJRdW8bQa5VkJXvDh3LhCfwB1z8WTCtOls0J3JgC2MXaqHBcWgCt47X5zXMunlnUIHVRdY83Ze2n6uIkkwQwrkT9-gp9EwCgLUWGnu2YSEBMNF0j7RMXqLxp3HCtxjvYaDBCHJXrbpLP-u82w_g.ts");
-		ffmpegService.reduceQuality(url, 24);
+		ffmpegService.reduceQuality(url, 24+"");
 		Thread.sleep(60000);		
 	}
 }

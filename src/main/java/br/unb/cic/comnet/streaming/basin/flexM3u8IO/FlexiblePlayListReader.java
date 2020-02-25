@@ -39,7 +39,12 @@ public class FlexiblePlayListReader {
 				if (currentSegment == null) {
 					currentSegment = new MediaSegment();
 				}
-				currentSegment.addInfo(line.getKey(), line.getValue());
+				if (line.getKey().equals(M3u8Tags.TAG_SEGMENT_INFORMATION)) {
+					String duration = line.getValue().split(",")[0];
+					currentSegment.setDuration(Float.valueOf(duration));
+				} else {
+					currentSegment.addInfo(line.getKey(), line.getValue());					
+				}
 			}
 			else if (line.getKey().equals(M3u8Tags.URL)) {
 				if (currentSegment == null) {

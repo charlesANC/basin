@@ -12,6 +12,7 @@ public class PlayList {
 	private Integer mediaSequence;
 	private List<ImmutablePair<String, String>> extraInfo;
 	private List<MediaSegment> segments;
+	private int maxNumSegments = 14;
 	
 	PlayList() {
 		this.segments = new ArrayList<MediaSegment>();
@@ -35,6 +36,9 @@ public class PlayList {
 	public Integer getMediaSequence() {
 		return mediaSequence;
 	}
+	public void incrementMediaSequence() {
+		mediaSequence++;
+	}
 	void setMediaSequence(Integer mediaSequence) {
 		this.mediaSequence = mediaSequence;
 	}
@@ -49,9 +53,20 @@ public class PlayList {
 	public List<MediaSegment> getSegments() {
 		return new ArrayList<MediaSegment>(segments);
 	}
+	public void addSegment(String url, float duration, List<ImmutablePair<String, String>> extraInfo) {
+		MediaSegment segment = new MediaSegment();
+		segment.setUrl(url);
+		segment.setDuration(duration);
+		segment.setInfo(extraInfo);
+		addSegment(segment);
+	}
 	void addSegment(MediaSegment segment) {
+		if (segments.size() >= maxNumSegments) {
+			segments.remove(0);
+		}
 		segments.add(segment);
 	}
+	
 	
 	public PlayList cloneWithoutSegments() {
 		PlayList playList = new PlayList();

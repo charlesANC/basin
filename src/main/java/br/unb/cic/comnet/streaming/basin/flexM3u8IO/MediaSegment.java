@@ -7,6 +7,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class MediaSegment {
 	private String url;
+	private float duration;
+	
 	private List<ImmutablePair<String, String>> info;
 	
 	MediaSegment() {
@@ -20,10 +22,20 @@ public class MediaSegment {
 		this.url = url;
 	}
 	
+	public float getDuration() {
+		return duration;
+	}
+	void setDuration(float duration) {
+		this.duration = duration;
+	}
+
 	public List<ImmutablePair<String, String>> getInfo() {
 		return info;
 	}
 	void addInfo(String key, String value) {
 		this.info.add(new ImmutablePair<String, String>(key, value));
+	}
+	void setInfo(List<ImmutablePair<String, String>> newInfo) {
+		this.info = newInfo;
 	}
 }

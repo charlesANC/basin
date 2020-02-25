@@ -15,4 +15,6 @@ public class M3u8Tags {
 	public static final String TAG_SEGMENT_INFORMATION = "#EXTINF";	
 	
 	public static final String TAG_PRE_FETCH = "#EXT-X-TWITCH-PREFETCH";
+	
+	public static final String TAG_END_OF_LIST = "#EXT-X-ENDLIST";
 }
