@@ -1,14 +1,10 @@
 package br.unb.cic.comnet.streaming.basin.web.controller;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import br.unb.cic.comnet.streaming.basin.services.FFmpegService;
 import br.unb.cic.comnet.streaming.basin.services.FileVideoService;
 import br.unb.cic.comnet.streaming.basin.services.TranscodingUnit;
+import br.unb.cic.comnet.streaming.basin.services.PlayListBuider;
+import br.unb.cic.comnet.streaming.basin.services.PseudoLiveUnit;
 import br.unb.cic.comnet.streaming.basin.web.model.HLSFile;
 
 @Controller
@@ -35,7 +33,7 @@ public class PageController {
 	@Autowired
 	private FFmpegService ffmpegService;
 	
-	private List<TranscodingUnit> jobs = new ArrayList<TranscodingUnit>();
+	private List<PlayListBuider> jobs = new ArrayList<PlayListBuider>();
 	
 	@GetMapping("/")
 	public String home(Model model) {
@@ -114,5 +112,13 @@ public class PageController {
 		}
 		
 		return "index";
+	}
+	
+	@GetMapping("/pseudolive/{fileName}")
+	public String pseudoLive(@PathVariable("fileName") String fileName, Model model) {
+		PseudoLiveUnit unitJob = new PseudoLiveUnit(videoService, ffmpegService, fileName.replace("_.m3u8", ""));
+		jobs.add(unitJob);
+		new Thread(unitJob).start();
+		return home(model);
 	}	
 }

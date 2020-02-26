@@ -6,15 +6,22 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class PlayList {
+	public static final int NUM_MAX_SEGMENTS = 14;	
 	
 	private Integer version;
 	private Float targetDuration;
 	private Integer mediaSequence;
 	private List<ImmutablePair<String, String>> extraInfo;
 	private List<MediaSegment> segments;
-	private int maxNumSegments = 14;
+	
+	private int maxNumSegments;
 	
 	PlayList() {
+		this(NUM_MAX_SEGMENTS);
+	}
+	
+	PlayList(int maxNumSegments) {
+		this.maxNumSegments = maxNumSegments;
 		this.segments = new ArrayList<MediaSegment>();
 		this.extraInfo = new ArrayList<ImmutablePair<String, String>>();
 	}

@@ -21,7 +21,7 @@ public class FlexiblePlayListReader {
 	}
 	
 	private PlayList createPlayList(List<ImmutablePair<String, String>> lines) {
-		PlayList playList = new PlayList();
+		PlayList playList = new PlayList(Integer.MAX_VALUE);
 		MediaSegment currentSegment = null;
 		
 		for(ImmutablePair<String, String> line : lines) {

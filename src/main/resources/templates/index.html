@@ -12,6 +12,7 @@
         <li th:each="fileName : ${fileNames}">
         	<span th:text="${fileName}" />&nbsp;
         	<a th:href="'play/'+${fileName}" >play</a>&nbsp;
+        	<a th:href="'pseudolive/'+${fileName}" >Start pseudo live</a>&nbsp;        	
         	<a th:href="'transcode/'+${fileName}" >transcode</a>
         </li>
     </ul>
