@@ -36,7 +36,7 @@ public class FFmpegService {
 				  	.setAudioChannels(2)
 				  	.setPreset("superfast")
 				  	.setFormat("hls")
-				  	.addExtraArgs("-hls_time", "6")
+				  	.addExtraArgs("-hls_time", "2")
 				  	.addExtraArgs("-hls_playlist_type", "event ")
 				  .done();
 		return builder;
@@ -50,7 +50,7 @@ public class FFmpegService {
 				  	.setVideoCodec("libx264")				  
 				  	.addExtraArgs("-crf", String.valueOf(factor))
 				  	.setAudioCodec("aac")
-				  	.setPreset("veryfast")
+				  	.setPreset("ultrafast")
 				  .done();
 		return builder;
 	}

@@ -52,7 +52,7 @@ public class PageController {
 		try {
 			Resource source = videoService.getVideoURL(fileName);
 			model.addAttribute("mediaType", videoService.getResourceMediaType(source));
-			model.addAttribute("fileURL", "/basin/videos/full/"+fileName);
+			model.addAttribute("fileURL", "/basin/videos/partials/"+fileName);
 			return "play";			
 		} catch (IOException e) {
 			log.error("Something wrong has happen >>> {}", e);

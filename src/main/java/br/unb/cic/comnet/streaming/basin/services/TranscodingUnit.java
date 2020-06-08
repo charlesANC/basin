@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class TranscodingUnit extends PlayListBuider {
 	@Override
 	public void initilize() {
 		try {
-			output = getFileService().createFileForWrinting(createOutputName());
+			output = getFileService().createFileForWriting(createOutputName());
 			log.info("Will write to the file " + output.getFilename());		
 			already = new ArrayList<String>();
 			
@@ -55,12 +57,16 @@ public class TranscodingUnit extends PlayListBuider {
 	@Override
 	public void process() {
 		try {
+			Instant start = Instant.now();
+			
 			MediaSegment nextSegment = getNextSegment(inputPlayList.getSegments());
 			if (nextSegment != null) {
 				log.info("Next file to be transcoded is " + nextSegment.getUrl());
 				
 				String newSegmentName = "part_" + partName + (index++) + ".ts";
+				
 				getFfmpegService().reduceQuality(new URL(nextSegment.getUrl()), newSegmentName);
+				
 				outputPlayList.addSegment(newSegmentName, nextSegment.getDuration(), nextSegment.getInfo());
 				if (index >= 3) {
 					log.info("Writing the output file...");
@@ -70,7 +76,11 @@ public class TranscodingUnit extends PlayListBuider {
 			}
 			
 			log.info("Updating source...");
+			
 			inputPlayList = readInputPlayList();
+			
+			Duration elapsed = Duration.between(start, Instant.now());
+			log.info("Elapsed time to transcode is " + Integer.valueOf(elapsed.getNano() / 1000000) + " miliseconds. ");			
 			
 		} catch(IOException e) {
 			log.error("Something wrong has happen >> {}", e);			

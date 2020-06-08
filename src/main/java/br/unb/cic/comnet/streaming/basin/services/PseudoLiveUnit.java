@@ -33,7 +33,7 @@ public class PseudoLiveUnit extends PlayListBuider {
 	public void initilize() {
 		try {
 			loadPlayLists();
-			output = getFileService().createFileForWrinting("pl_" + partsPrefix + ".m3u8");
+			output = getFileService().createFileForWriting("pl_" + partsPrefix + ".m3u8");
 		} catch (IOException e) {
 			log.error("Something wrong has happened >> {}", e);
 			stop();
@@ -49,7 +49,7 @@ public class PseudoLiveUnit extends PlayListBuider {
 			if (index > original.getSegments().size()) {
 				stop();
 			}
-			Thread.sleep(5000);
+			Thread.sleep(2000);
 		} catch (IOException | InterruptedException e) {
 			log.error("Something wrong has happened >> {}", e);
 			stop();

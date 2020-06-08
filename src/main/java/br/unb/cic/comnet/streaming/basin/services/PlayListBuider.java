@@ -53,7 +53,7 @@ public abstract class PlayListBuider implements Runnable {
 		log.info("Will start the loop...");
 		while(!hasToStop) {
 			process();
-			log.info("looooop...");				
+			log.info("looooop...");
 		}
 	}
 	

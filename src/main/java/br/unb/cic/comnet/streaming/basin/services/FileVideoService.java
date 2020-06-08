@@ -68,7 +68,7 @@ public class FileVideoService {
 		}
 	}
 	
-	public Resource createFileForWrinting(String fileName) throws FileNotFoundException, IOException {
+	public Resource createFileForWriting(String fileName) throws FileNotFoundException, IOException {
 		Resource newFile = getInputResource(fileName);
 		newFile.getFile().createNewFile();
 		return newFile;
@@ -103,7 +103,7 @@ public class FileVideoService {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(output, Charset.forName("UTF-8")));
 		) {
 			String url = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-			url = url + "/videos/full/";
+			url = url + "/videos/partials/";
 			String line = null;
 			while((line = reader.readLine()) != null) {
 				if (!line.startsWith("#") && !line.startsWith(url)){
@@ -112,6 +112,7 @@ public class FileVideoService {
 					writer.write(line + "\r\n");					
 				}
 			}
+			writer.flush();
 		}
 	}
 }
