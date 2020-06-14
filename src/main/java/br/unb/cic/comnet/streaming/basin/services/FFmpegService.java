@@ -49,6 +49,8 @@ public class FFmpegService {
 				  .addOutput(output)
 				  	.setVideoCodec("libx264")				  
 				  	.addExtraArgs("-crf", String.valueOf(factor))
+				  	.addExtraArgs("-copyts")	
+				  	.addExtraArgs("-muxdelay", "0")				  	
 				  	.setAudioCodec("aac")
 				  	.setPreset("ultrafast")
 				  .done();

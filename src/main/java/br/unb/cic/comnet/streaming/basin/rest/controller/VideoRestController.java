@@ -47,6 +47,7 @@ public class VideoRestController {
 			
 			return ResponseEntity
 					.status(HttpStatus.OK)
+					 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + fileName)
 					.contentType(mediaType)
 					.cacheControl(getCacheControl(mediaType))
 					.body(resource);			
@@ -89,6 +90,7 @@ public class VideoRestController {
 			HttpRange range = headers.getRange().isEmpty() ? null : headers.getRange().get(0);
 			return ResponseEntity
 						.status(HttpStatus.PARTIAL_CONTENT)
+						 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + fileName)						
 						.contentType(videoService.getResourceMediaType(resource))
 						.body(videoService.getResourceRegion(resource, range));
 		} catch(IOException e) {

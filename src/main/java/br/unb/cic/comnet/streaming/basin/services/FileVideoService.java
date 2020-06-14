@@ -103,7 +103,7 @@ public class FileVideoService {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(output, Charset.forName("UTF-8")));
 		) {
 			String url = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-			url = url + "/videos/partials/";
+			url = url + "/videos/full/";
 			String line = null;
 			while((line = reader.readLine()) != null) {
 				if (!line.startsWith("#") && !line.startsWith(url)){
